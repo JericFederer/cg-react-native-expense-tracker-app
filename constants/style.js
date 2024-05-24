@@ -24,5 +24,6 @@ export const GlobalStyles = {
     accent700: '#fff7c4',
     secondary50: '#dda15e',
     secondary100: '#bc6c25',
+    error500: '#9b095c',
   }
 };

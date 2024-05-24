@@ -7,6 +7,7 @@ import { getFormattedDate } from '@/util/date';
 function renderExpenseItemHandler(itemData) {
   return (
     <ExpenseItem
+      id={ itemData.item.id }
       description={ itemData.item.description }
       date={ getFormattedDate(itemData.item.date) }
       amount={ itemData.item.amount }

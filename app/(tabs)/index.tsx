@@ -8,7 +8,8 @@ import ManageExpense from '@/screens/ManageExpense';
 import RecentExpenses from '@/screens/RecentExpenses';
 import AllExpenses from '@/screens/AllExpenses';
 import { GlobalStyles } from '@/constants/style';
-import IconButton from '@/components/UI/IconButtons';
+import IconButton from '@/components/UI/IconButton';
+import ExpensesContextProvider from '@/store/expenses-context';
 
 // * NAVIGATION
 const Stack = createNativeStackNavigator();
@@ -79,29 +80,31 @@ export default function App() {
   return (
     <>
       <StatusBar style="inverted" />
-      <NavigationContainer independent={ true }>
-        <Stack.Navigator
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: GlobalStyles.armyColorPalette.primary500
-            },
-            headerTintColor: "white",
-          }}
-        >
-          <Stack.Screen
-            name="ExpensesOverview"
-            component={ ExpensesOverview }
-            options={{ headerShown: false }}
-          /> 
-          <Stack.Screen
-            name="ManageExpense"
-            component={ ManageExpense }
-            options={{
-              presentation: "modal"
+      <ExpensesContextProvider>
+        <NavigationContainer independent={ true }>
+          <Stack.Navigator
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: GlobalStyles.armyColorPalette.primary500
+              },
+              headerTintColor: "white",
             }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+          >
+            <Stack.Screen
+              name="ExpensesOverview"
+              component={ ExpensesOverview }
+              options={{ headerShown: false }}
+            /> 
+            <Stack.Screen
+              name="ManageExpense"
+              component={ ManageExpense }
+              options={{
+                presentation: "modal"
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ExpensesContextProvider>
     </>
   );
 }
