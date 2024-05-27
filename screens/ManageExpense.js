@@ -1,14 +1,23 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useContext } from 'react';
 
 import IconButton from '@/components/UI/IconButton';
-import Button from '@/components/UI/Button';
 import { GlobalStyles } from '@/constants/style';
+import { ExpensesContext } from '@/store/expenses-context';
+import ExpenseForm from '@/components/ManageExpense/ExpenseForm';
 
 function ManageExpense({ route, navigation }) {
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
 
+
+  // * UseContext
+  const expenseCtx = useContext(ExpensesContext);
+  const selectedExpense = expenseCtx.expenses.find(
+    (expense) => expense.id === editedExpenseId
+  );
+  
+  // * UseLayout
   useLayoutEffect(() => {
     navigation.setOptions({
       title: isEditing ? "Edit Expense" : "Add Expense"
@@ -19,35 +28,35 @@ function ManageExpense({ route, navigation }) {
 
   // * HANDLERS
   function deleteExpenseHandler() {
-
+    expenseCtx.deleteExpense(editedExpenseId);
+    navigation.goBack();
   }
 
   function cancelHandler() {
     navigation.goBack();
   }
 
-  function confirmHandler() {
+  function confirmHandler(expenseData) {
+    if (isEditing) {
+      expenseCtx.updateExpense(
+        editedExpenseId,
+        expenseData
+      );
+    } else {
+      expenseCtx.addExpense(expenseData);
+    }
 
+    navigation.goBack();
   }
 
   return (
     <View style={ styles.container }>
-      <View style={ styles.buttons }>
-        <Button
-          mode="flat"
-          onPress={ cancelHandler }
-          style={ styles.button }
-        >
-          Cancel
-        </Button>
-
-        <Button
-          onPress={ confirmHandler }
-          style={ styles.button }
-        >
-          { isEditing ? "Update" : "Add" }
-        </Button>
-      </View>
+      <ExpenseForm
+        submitButtonLabel={ isEditing ? "Update" : "Add" }
+        onSubmit={ confirmHandler }
+        onCancel={ cancelHandler }
+        defaultValues={ selectedExpense }
+      />
 
       { 
         isEditing &&
@@ -79,13 +88,4 @@ const styles = StyleSheet.create({
     borderTopColor: GlobalStyles.armyColorPalette.accent500,
     alignItems: 'center',
   },
-  buttons: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    minWidth: 120,
-    marginHorizontal: 8,
-  }
 });

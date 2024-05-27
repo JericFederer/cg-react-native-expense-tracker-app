@@ -120,6 +120,11 @@ function expensesReducer(state, action) {
       const updatedItem = { ...updatableExpense, ...action.payload.data };
       const updatedExpenses = [...state];
       updatedExpenses[updatableExpenseIndex] = updatedItem;
+
+      console.log(updatableExpense)
+      console.log(updatedItem)
+      console.log(updatedExpenses)
+
       return updatedExpenses;
 
     case 'DELETE':
