@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { useState } from 'react';
 
 import Input from './Input';
@@ -80,68 +80,72 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
       !inputs.description.isValid;
 
   return (
-    <View style={ styles.form }>
-      <Text style={ styles.title }>Your Expense</Text>
-      <View style={ styles.inputsRow }>
-        <Input
-          label="Amount"
-          style={ styles.rowInput }
-          invalid={ !inputs.amount.isValid }
-          textInputConfig={{
-            keyboardType: "decimal-pad",
-            onChangeText: inputChangedHandler.bind(this, "amount"),
-            value: inputs.amount.value,
-          }}
-        />
-        
-        <Input
-          label="Date"
-          style={ styles.rowInput }
-          invalid={ !inputs.date.isValid }
-          textInputConfig={{
-            placeholder: "YYYY-MM-DD",
-            maxLength: 10,
-            onChangeText: inputChangedHandler.bind(this, "date"),
-            value: inputs.date.value,
-          }}  
-        />
-      </View>
+    <KeyboardAvoidingView behavior='position' style={{ flex: 1 }}>
+      <ScrollView>
+        <View style={ styles.form }>
+          <Text style={ styles.title }>Your Expense</Text>
+          <View style={ styles.inputsRow }>
+            <Input
+              label="Amount"
+              style={ styles.rowInput }
+              invalid={ !inputs.amount.isValid }
+              textInputConfig={{
+                keyboardType: "decimal-pad",
+                onChangeText: inputChangedHandler.bind(this, "amount"),
+                value: inputs.amount.value,
+              }}
+            />
+            
+            <Input
+              label="Date"
+              style={ styles.rowInput }
+              invalid={ !inputs.date.isValid }
+              textInputConfig={{
+                placeholder: "YYYY-MM-DD",
+                maxLength: 10,
+                onChangeText: inputChangedHandler.bind(this, "date"),
+                value: inputs.date.value,
+              }}  
+            />
+          </View>
 
-      <Input
-        label="Description"
-        invalid={ !inputs.description.isValid }
-        textInputConfig={{
-          multiline: true,
-          autoCorrect: false,
-          autoCapitalize: "sentences",
-          onChangeText: inputChangedHandler.bind(this, "description"),
-          value: inputs.description.value,
-        }}  
-      />
+          <Input
+            label="Description"
+            invalid={ !inputs.description.isValid }
+            textInputConfig={{
+              multiline: true,
+              autoCorrect: false,
+              autoCapitalize: "sentences",
+              onChangeText: inputChangedHandler.bind(this, "description"),
+              value: inputs.description.value,
+            }}  
+          />
 
-      {
-        formIsInvalid && <Text style={ styles.errorText }>
-          Invalid input -- Please check your input values.
-        </Text>
-      }
+          {
+            formIsInvalid && <Text style={ styles.errorText }>
+              Invalid input -- Please check your input values.
+            </Text>
+          }
 
-      <View style={ styles.buttons }>
-        <Button
-          mode="flat"
-          onPress={ onCancel }
-          style={ styles.button }
-        >
-          Cancel
-        </Button>
+          <View style={ styles.buttons }>
+            <Button
+              mode="flat"
+              onPress={ onCancel }
+              style={ styles.button }
+            >
+              Cancel
+            </Button>
 
-        <Button
-          onPress={ submitHandler }
-          style={ styles.button }
-        >
-          { submitButtonLabel }
-        </Button>
-      </View>
-    </View>
+            <Button
+              onPress={ submitHandler }
+              style={ styles.button }
+            >
+              { submitButtonLabel }
+            </Button>
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 

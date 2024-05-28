@@ -1,107 +1,9 @@
 import { createContext, useReducer } from 'react';
 
-const DUMMY_EXPENSES = [
-  {
-    id: "e1",
-    description: "An electronic piano keyboard",
-    amount: 9999,
-    date: new Date("2024-05-23")
-  },
-  {
-    id: "e2",
-    description: "An electronic mini piano keyboard",
-    amount: 999,
-    date: new Date("2024-05-22")
-  },
-  {
-    id: "e3",
-    description: "A piano figurine",
-    amount: 99,
-    date: new Date("2024-05-11")
-  },
-  {
-    id: "e4",
-    description: "A piano composition book",
-    amount: 369,
-    date: new Date("2024-05-11")
-  },
-  {
-    id: "e5",
-    description: "An electronic piano keyboard",
-    amount: 9999,
-    date: new Date("2024-05-11")
-  },
-  {
-    id: "e6",
-    description: "An electronic mini piano keyboard",
-    amount: 999,
-    date: new Date("2024-05-11")
-  },
-  {
-    id: "e7",
-    description: "A piano figurine",
-    amount: 99,
-    date: new Date("2024-05-11")
-  },
-  {
-    id: "e8",
-    description: "A piano composition book",
-    amount: 369,
-    date: new Date("2024-05-11")
-  },
-  {
-    id: "e9",
-    description: "An electronic piano keyboard",
-    amount: 9999,
-    date: new Date("2024-05-11")
-  },
-  {
-    id: "e10",
-    description: "An electronic mini piano keyboard",
-    amount: 999,
-    date: new Date("2024-05-11")
-  },
-  {
-    id: "e11",
-    description: "A piano figurine",
-    amount: 99,
-    date: new Date("2024-05-11")
-  },
-  {
-    id: "e12",
-    description: "A piano composition book",
-    amount: 369,
-    date: new Date("2024-05-11")
-  },
-  {
-    id: "e13",
-    description: "An electronic piano keyboard",
-    amount: 9999,
-    date: new Date("2024-05-11")
-  },
-  {
-    id: "e14",
-    description: "An electronic mini piano keyboard",
-    amount: 999,
-    date: new Date("2024-05-11")
-  },
-  {
-    id: "e15",
-    description: "A piano figurine",
-    amount: 99,
-    date: new Date("2024-05-11")
-  },
-  {
-    id: "e16",
-    description: "A piano composition book",
-    amount: 369,
-    date: new Date("2024-05-20")
-  }
-];
-
 export const ExpensesContext = createContext({
   expenses: [],
   addExpense: ({ description, amount, date }) => {},
+  setExpenses: (expenses) => {},
   deleteExpense: (id) => {},
   updateExpense: (id, { description, amount, date }) => {},
 });
@@ -109,8 +11,13 @@ export const ExpensesContext = createContext({
 function expensesReducer(state, action) {
   switch (action.type) {
     case 'ADD':
-      const id = new Date().toString() + Math.random().toString();
-      return [{ ...action.payload, id: id }, ...state];
+      // const id = new Date().toString() + Math.random().toString();
+      // return [{ ...action.payload, id: id }, ...state];
+      return [action.payload, ...state];
+
+    case 'SET':
+      const invertedPayload = action.payload.reverse();
+      return invertedPayload;
 
     case 'UPDATE':
       const updatableExpenseIndex = state.findIndex(
@@ -120,10 +27,6 @@ function expensesReducer(state, action) {
       const updatedItem = { ...updatableExpense, ...action.payload.data };
       const updatedExpenses = [...state];
       updatedExpenses[updatableExpenseIndex] = updatedItem;
-
-      console.log(updatableExpense)
-      console.log(updatedItem)
-      console.log(updatedExpenses)
 
       return updatedExpenses;
 
@@ -136,10 +39,14 @@ function expensesReducer(state, action) {
 }
 
 function ExpensesContextProvider({ children }) {
-  const [expensesState, dispatch] = useReducer(expensesReducer, DUMMY_EXPENSES);
+  const [expensesState, dispatch] = useReducer(expensesReducer, []);
 
   function addExpense(expenseData) {
     dispatch({ type: 'ADD', payload: expenseData });
+  }
+
+  function setExpenses(expenses) {
+    dispatch({ type: 'SET', payload: expenses })
   }
 
   function deleteExpense(id) {
@@ -152,6 +59,7 @@ function ExpensesContextProvider({ children }) {
 
   const value = {
     expenses: expensesState,
+    setExpenses: setExpenses,
     addExpense: addExpense,
     deleteExpense: deleteExpense,
     updateExpense: updateExpense,
